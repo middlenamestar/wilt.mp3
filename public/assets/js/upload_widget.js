@@ -1,21 +1,38 @@
 const cloudName = "df60zox38";
 const uploadPreset = "adbsipsa";
+const array = JSON.parse(localStorage.getItem("feed")) || [];
 
-const myWidget = cloudinary.createUploadWidget(
-  {
-    cloudName: cloudName,
-    uploadPreset: uploadPreset,
-  },
-  (error, result) => {
-    if (!error && result && result.event === "success") {
-      // console.log("Done! Here is the image info: ", result.info.url);
-      // const url = result.info.url;
-      $(`<audio controls src="https://res.cloudinary.com/df60zox38/video/upload/v1647027919/kvtwrohnhspsij8np84a.mp3">Your browser does not support the
-        <code>audio</code> element.
-    </audio>`).appendTo("#container");
-    }
-  }
+console.log(array);
+
+// upload function
+const myWidget = cloudinary.createUploadWidget({ cloudName: cloudName, uploadPreset: uploadPreset }, (error, result) => {
+
+  if (!error && result && result.event === "success") {
+    // console.log(result);
+    console.log("Done! Here is the image info: ", result.info.url);
+
+    localStorage.setItem("feed", JSON.stringify(`<audio controls src="${result.info.url}">Your browser does not support the<code>audio</code> element.</audio>`));
+
+    // array.push(`<audio controls src="${result.info.url}">Your browser does not support the<code>audio</code> element.</audio>`);
+    // console.log(array);
+  };
+
+}
 );
+
+// function renderFeed(){
+//   $(array.appendTo("#music-feed"));
+
+
+
+// };
+
+// for (var i = 0; i < array.length; i++) {
+// };
+
+// $(`<audio controls src="${result.info.url}">Your browser does not support the
+//           <code>audio</code> element.
+//           </audio>`).appendTo("#music-feed");
 
 document.getElementById("upload_widget").addEventListener("click", () => myWidget.open(), false);
 
