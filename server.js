@@ -1,6 +1,8 @@
 const express = require('express');
 const path = require('path');
 const session = require('express-session');
+const methodOverride = require('method-override');
+const routes = require('./routes');
 
 const mongoose = require('mongoose');
 
@@ -26,8 +28,14 @@ app.use(session({
     cookie: {}
 }));
 
+app.use(methodOverride('_method'));
+
 // serve static files
 app.use(express.static('public'));
+
+app.use(express.urlencoded({extended: true}))
+
+app.use(routes);
 
 // don't think i have to do /public, but gonna leave it for now
 app.get('/', (req, res) =>
