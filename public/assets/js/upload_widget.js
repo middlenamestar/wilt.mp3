@@ -1,6 +1,9 @@
 const cloudName = "df60zox38";
 const uploadPreset = "adbsipsa";
-const array = JSON.parse(localStorage.getItem("feed")) || [];
+// const array = JSON.parse(localStorage.getItem("feed")) || [];
+
+const mongoose = require('mongoose');
+const mp3 = require('../../../models/mp3');
 
 console.log(array);
 
@@ -9,9 +12,13 @@ const myWidget = cloudinary.createUploadWidget({ cloudName: cloudName, uploadPre
 
   if (!error && result && result.event === "success") {
     // console.log(result);
-    console.log("Done! Here is the image info: ", result.info.url);
+    console.log("Done! Here is the url: ", result.info.url);
 
-    localStorage.setItem("feed", JSON.stringify(`<audio controls src="${result.info.url}">Your browser does not support the<code>audio</code> element.</audio>`));
+    // mp3.create({
+    //   $push: {url: [result.info.url]}
+    // });
+
+    // localStorage.setItem("feed", JSON.stringify(`<audio controls src="${result.info.url}">Your browser does not support the<code>audio</code> element.</audio>`));
 
     // array.push(`<audio controls src="${result.info.url}">Your browser does not support the<code>audio</code> element.</audio>`);
     // console.log(array);
