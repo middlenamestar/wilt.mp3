@@ -1,8 +1,8 @@
 const express = require('express');
 const path = require('path');
-const session = require('express-session');
 const methodOverride = require('method-override');
 const routes = require('./routes');
+require('dotenv').config();
 
 const mongoose = require('mongoose');
 
@@ -20,13 +20,6 @@ mongoose.connect(
 const PORT = process.env.PORT || 3001;
 
 const app = express();
-
-app.use(session({
-    secret: 'meow 5555',
-    resave: false,
-    saveUninitialized: true,
-    cookie: {}
-}));
 
 app.use(methodOverride('_method'));
 
