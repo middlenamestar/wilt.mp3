@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const User = require('./models/User');
+const generateToken = require('./auth');
 
 // create new user
 router.post('/users', async (req, res) => {
@@ -9,12 +10,9 @@ router.post('/users', async (req, res) => {
             password: req.body.password
         })
         await newUser.save()
-        req.session.save(() => {
-            req.session.username = newUser.username;
-            req.session.loggedIn = true;
-            console.log(req.session);
-        })
-        console.log(`new user info: ${newUser}`);
+        const token = generateToken(newUser._id)
+
+        console.log(`new user: ${newUser} and token: ${token}`);
         res.send('NEW USER REGISTERED');
     } catch (err) {
         console.log(err)
@@ -22,3 +20,5 @@ router.post('/users', async (req, res) => {
 });
 
 module.exports = router;
+
+// add a "if user already exists" error to make sure duplicate users are not registered.
