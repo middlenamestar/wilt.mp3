@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const User = require('./models/User');
-const generateToken = require('./auth');
+const { generateToken, protect } = require('./auth');
 const bcrypt = require('bcrypt');
 
 // create new user
@@ -10,13 +10,20 @@ router.post('/users', async (req, res) => {
             username: req.body.username,
             password: req.body.password
         })
-        // save to db
+
         await newUser.save()
 
-        const token = generateToken(newUser._id)
+        if(newUser) {
+            res.status(201).json({
+                _id: newUser.id,
+                username: newUser.username,
+                token: generateToken(newUser.username)
+            })
+        } else {
+            res.status(400)
+            console.log('invalid user data')
+        }
 
-        console.log(`new user: ${newUser} and token: ${token}`);
-        res.send('NEW USER REGISTERED');
     } catch (err) {
         console.log(err)
     }
@@ -33,18 +40,33 @@ router.post('/users/login', async (req, res) => {
         const user = await User.findOne({username})
 
         if(user && (await bcrypt.compare(password, user.password))) {
-            // success. logged in.
-            const token = generateToken(user._id)
-            console.log(`successfully logged in, here is jwt token: ${token}`)
-            res.send('u r now logged in ☆')
+            res.json({
+                _id: user.id,
+                username: user.username,
+                token: generateToken(user.username)
+            })
         } else {
-            // please check your credentials!
+            res.status(400)
             console.log('invalid credentials')
-            res.send('nah')
         }
     } catch (err) {
         console.log(err)
     }
+});
+
+// render homepage
+router.get('/', async (req, res) => {
+    res.render('index');
+});
+
+// render register/login page
+router.get('/user-login', async (req, res) => {
+    res.render('user-login');
+});
+
+// render protected page
+router.get('/locked', protect, async (req, res) => {
+    res.render('locked');
 });
 
 module.exports = router;
