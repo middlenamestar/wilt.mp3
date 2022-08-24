@@ -3,7 +3,7 @@ const uploadPreset = "adbsipsa";
 // const array = JSON.parse(localStorage.getItem("feed")) || [];
 
 const mongoose = require('mongoose');
-const mp3 = require('../../../models/mp3');
+const mp3 = require('../../models/mp3');
 
 console.log(array);
 
